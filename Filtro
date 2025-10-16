@@ -1,0 +1,15 @@
+import cv2 as cv
+import numpy as np
+
+# Cargar la imagen en escala de grises
+img = cv.imread('Prueba.jpg', 1)
+
+kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+# Se aplica el filtro y se usa el '-1' para que mantenga la misma profundidad que la imagen original
+filtrada = cv.filter2D(img,-1,kernel)
+
+# Mostrar la imagen original y la filtrada en tamaño normal
+cv.imshow('Imagen Original', img)
+cv.imshow('Imagen filtrada', filtrada)
+cv.waitKey(0)
+cv.destroyAllWindows()
