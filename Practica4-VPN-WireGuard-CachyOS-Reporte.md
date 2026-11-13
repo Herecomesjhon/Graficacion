@@ -13,7 +13,7 @@
 | **Número de Control** | 23121073 |
 | **Asignatura** | Taller de sistemas operativos |
 | **Docente** | Brenda Guadalupe Gonzalez |
-| **Lugar y Fecha** | Morelia, Michoacán — 12 de Noviembre de 2026 |
+| **Lugar y Fecha** | Morelia, Michoacán — 13 de Noviembre de 2026 |
 
 ---
 
