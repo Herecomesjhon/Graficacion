@@ -291,14 +291,42 @@ La práctica cumple el objetivo de crear y comprobar una red privada virtual, ad
 
 ## 11. Anexos (evidencias)
 
-> Pegar aquí capturas de pantalla:
+### Anexo A. Generación de configuración del cliente y código QR
+Se generó el archivo de configuración del celular y se exportó mediante QR para importarlo en la app WireGuard.
 
-- [ ] Instalación de `wireguard-tools`
-- [ ] Archivo `/etc/wireguard/wg0.conf`
-- [ ] `systemctl status wg-quick@wg0`
-- [ ] `sudo wg show` con handshake
-- [ ] App WireGuard en el celular (estado activo)
-- [ ] `ping 10.10.10.10` exitoso
+![QR y configuración del cliente](evidencias-practica4/01-qr-config-cliente.png)
+
+### Anexo B. Configuración del servidor, firewall y servicio
+Se configuró `/etc/wireguard/wg0.conf`, se permitió el puerto `51820/udp` en `ufw` y se reinició el servicio `wg-quick@wg0`.
+
+![Configuración wg0, ufw y systemctl](evidencias-practica4/02-wg0-conf-ufw-systemctl.png)
+
+### Anexo C. Verificación del túnel y prueba de conectividad
+Salida de `sudo wg show` con `latest handshake` y prueba `ping 10.10.10.10` exitosa.
+
+![wg show y ping](evidencias-practica4/03-wg-show-ping.png)
+
+### Anexo D. Cliente Android conectado
+Aplicación WireGuard en el celular con túnel activo, dirección VPN `10.10.10.10/32`, endpoint del servidor y transferencia de datos.
+
+![App WireGuard activa](evidencias-practica4/04-app-wireguard-activo.jpg)
+
+### Anexo E. Estado general del túnel en el celular
+Túnel **Hotspot** activado (ON) y dispositivo conectado al esquema de prueba.
+
+![Túnel Hotspot conectado](evidencias-practica4/05-tunel-hotspot-conectado.jpg)
+
+### Checklist de evidencias
+
+- [x] Configuración del cliente / QR
+- [x] Archivo `/etc/wireguard/wg0.conf`
+- [x] Firewall (`ufw allow 51820/udp`)
+- [x] `sudo wg show` con handshake
+- [x] App WireGuard en el celular (estado activo)
+- [x] `ping 10.10.10.10` exitoso
+
+> Nota: si el profesor pide también `systemctl status wg-quick@wg0` en captura aparte, tomarla mañana con:
+> `systemctl --no-pager -l status wg-quick@wg0`
 
 ---
 
