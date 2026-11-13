@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Práctica 4 - VPN WireGuard - Cristian Muñoz Hinojosa</title>
+  <style>
+    :root {
+      --navy: #1a3a6b;
+      --text: #222;
+      --muted: #444;
+      --row: #eef3f8;
+      --border: #c5d0de;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+      color: var(--text);
+      margin: 0;
+      background: #fff;
+      line-height: 1.45;
+    }
+    .page {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 40px 48px 60px;
+    }
+    .cover {
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      page-break-after: always;
+    }
+    .cover-header {
+      text-align: center;
+      margin-top: 24px;
+    }
+    .cover-header h1 {
+      margin: 0;
+      color: var(--navy);
+      font-size: 22px;
+      letter-spacing: 0.5px;
+      font-weight: 800;
+    }
+    .cover-header h2,
+    .cover-header h3 {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+    .bar {
+      height: 28px;
+      background: var(--navy);
+      margin: 48px 0 56px;
+      border-radius: 2px;
+    }
+    .cover-title {
+      text-align: center;
+      margin-bottom: 70px;
+    }
+    .cover-title .main {
+      margin: 0;
+      color: var(--navy);
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+    .cover-title .sub {
+      margin: 14px 0 0;
+      font-family: "Times New Roman", Times, serif;
+      font-size: 20px;
+      color: #111;
+    }
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: auto;
+      border: 1px solid var(--border);
+    }
+    .info-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      font-size: 15px;
+    }
+    .info-table tr:nth-child(odd) { background: var(--row); }
+    .info-table tr:nth-child(even) { background: #fff; }
+    .info-table td:first-child {
+      width: 220px;
+      font-weight: 700;
+      color: #111;
+    }
+    h2.section {
+      color: var(--navy);
+      border-bottom: 2px solid var(--navy);
+      padding-bottom: 6px;
+      margin-top: 34px;
+    }
+    h3 { color: #243b63; margin-top: 22px; }
+    p, li { font-size: 15px; }
+    table.data {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 18px;
+      font-size: 14px;
+    }
+    table.data th, table.data td {
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      text-align: left;
+    }
+    table.data th {
+      background: var(--navy);
+      color: #fff;
+    }
+    table.data tr:nth-child(even) { background: #f7f9fc; }
+    pre, code {
+      font-family: Consolas, "Courier New", monospace;
+    }
+    pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 14px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 12.5px;
+      line-height: 1.4;
+    }
+    .note {
+      background: #f3f7fb;
+      border-left: 4px solid var(--navy);
+      padding: 10px 12px;
+      margin: 14px 0;
+      font-size: 14px;
+    }
+    .evidence img {
+      max-width: 100%;
+      border: 1px solid #d0d7e2;
+      border-radius: 6px;
+      margin: 10px 0 22px;
+    }
+    .evidence h3 {
+      margin-bottom: 6px;
+    }
+    ul.check { list-style: none; padding-left: 0; }
+    ul.check li:before { content: "☑ "; color: var(--navy); }
+    @media print {
+      .page { padding: 20px 28px; max-width: none; }
+      .cover { min-height: 100vh; }
+      a { color: inherit; text-decoration: none; }
+      pre { white-space: pre-wrap; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- PORTADA -->
+    <section class="cover">
+      <div class="cover-header">
+        <h1>INSTITUTO TECNOLÓGICO DE MORELIA</h1>
+        <h2>DEPARTAMENTO DE SISTEMAS Y COMPUTACIÓN</h2>
+        <h3>INGENIERÍA EN SISTEMAS COMPUTACIONALES</h3>
+      </div>
+
+      <div class="bar"></div>
+
+      <div class="cover-title">
+        <p class="main">PRACTICA 4 TALLER DE SISTEMAS OPERATIVOS</p>
+        <p class="sub">Creación de una Red Privada Virtual (VPN) con WireGuard en CachyOS</p>
+      </div>
+
+      <table class="info-table">
+        <tr>
+          <td>Presenta</td>
+          <td>Cristian Muñoz Hinojosa</td>
+        </tr>
+        <tr>
+          <td>Número de Control</td>
+          <td>23121073</td>
+        </tr>
+        <tr>
+          <td>Asignatura</td>
+          <td>Taller de sistemas operativos</td>
+        </tr>
+        <tr>
+          <td>Docente</td>
+          <td>Brenda Guadalupe Gonzalez</td>
+        </tr>
+        <tr>
+          <td>Lugar y Fecha</td>
+          <td>Morelia, Michoacán — 12 de Noviembre de 2026</td>
+        </tr>
+      </table>
+    </section>
+
+    <!-- CONTENIDO -->
+    <h2 class="section">1. Objetivo</h2>
+    <p>
+      Implementar y verificar una Red Privada Virtual (VPN) en un sistema operativo Linux moderno,
+      permitiendo la comunicación segura entre un servidor (PC) y un cliente (dispositivo móvil),
+      utilizando un protocolo actual y soportado.
+    </p>
+    <p>
+      En esta práctica se sustituyó el servicio original propuesto en la guía
+      (<strong>PPTP / pptpd en Ubuntu</strong>) por <strong>WireGuard en CachyOS</strong>,
+      debido a que PPTP se considera obsoleto e inseguro.
+    </p>
+
+    <h2 class="section">2. Introducción</h2>
+    <p>
+      Una VPN (Virtual Private Network) permite crear un túnel cifrado entre dos o más dispositivos
+      a través de una red pública o local, de modo que la comunicación se comporte como si estuvieran
+      en una misma red privada.
+    </p>
+
+    <h3>2.1. Servicio propuesto en la guía original</h3>
+    <ul>
+      <li>Sistema operativo: Ubuntu</li>
+      <li>Servicio VPN: <strong>PPTP</strong> (<code>pptpd</code>)</li>
+      <li>Archivos: <code>/etc/pptpd.conf</code> y <code>/etc/ppp/chap-secrets</code></li>
+      <li>Administración con <code>systemctl</code></li>
+      <li>Cliente: Android con tipo de VPN PPTP</li>
+    </ul>
+
+    <h3>2.2. Limitaciones de PPTP</h3>
+    <ul>
+      <li>Protocolo antiguo y vulnerable.</li>
+      <li>Android lo marca como “VPN no segura”.</li>
+      <li>Soporte limitado en distros actuales.</li>
+    </ul>
+
+    <h3>2.3. Alternativa moderna utilizada</h3>
+    <p>
+      Se implementó <strong>WireGuard</strong>, un protocolo VPN moderno, más simple, rápido y seguro,
+      incluido en el kernel de Linux y soportado en CachyOS y Android.
+    </p>
+
+    <table class="data">
+      <thead>
+        <tr>
+          <th>Concepto en PPTP</th>
+          <th>Equivalente en WireGuard</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><code>apt install pptpd</code></td><td><code>pacman -S wireguard-tools</code></td></tr>
+        <tr><td><code>/etc/pptpd.conf</code></td><td><code>/etc/wireguard/wg0.conf</code></td></tr>
+        <tr><td><code>chap-secrets</code> (usuario/contraseña)</td><td>Claves pública y privada</td></tr>
+        <tr><td><code>systemctl start pptpd</code></td><td><code>systemctl enable --now wg-quick@wg0</code></td></tr>
+        <tr><td>Cliente Android PPTP</td><td>App oficial WireGuard</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section">3. Material y equipo</h2>
+    <ul>
+      <li>Computadora con <strong>CachyOS</strong></li>
+      <li>Kernel con soporte WireGuard</li>
+      <li>Teléfono Android con app <strong>WireGuard</strong></li>
+      <li>Hotspot / red local</li>
+      <li>Herramientas: <code>wireguard-tools</code>, <code>systemd</code>, <code>ufw</code>, <code>qrencode</code></li>
+    </ul>
+
+    <h2 class="section">4. Desarrollo de la práctica</h2>
+
+    <h3>4.1. Instalación del servicio</h3>
+<pre>sudo pacman -Syu
+sudo pacman -S wireguard-tools
+sudo modprobe wireguard
+wg --version</pre>
+
+    <h3>4.2. Generación de claves</h3>
+<pre>sudo mkdir -p /etc/wireguard
+sudo chmod 700 /etc/wireguard
+sudo bash -c 'cd /etc/wireguard && umask 077 && wg genkey | tee server_private.key | wg pubkey > server_public.key'
+sudo bash -c 'cd /etc/wireguard && umask 077 && wg genkey | tee client_private.key | wg pubkey > client_public.key'</pre>
+
+    <h3>4.3. Configuración del servidor VPN</h3>
+    <p>Archivo: <code>/etc/wireguard/wg0.conf</code></p>
+    <p>Equivalencia con la guía:</p>
+    <ul>
+      <li><code>localip 10.10.10.1</code> → <code>Address = 10.10.10.1/24</code></li>
+      <li><code>remoteip 10.10.10.10-...</code> → <code>AllowedIPs = 10.10.10.10/32</code></li>
+    </ul>
+<pre>[Interface]
+Address = 10.10.10.1/24
+ListenPort = 51820
+PrivateKey = UBVZ9ahcIiKWX80LAAeccNTxqMzCiRXILzqRaiWrwnc=
+
+[Peer]
+PublicKey = jc/7vq4fminBXonPq4Edst/fCvs7Hi8J8WFYQCt0BGQ=
+AllowedIPs = 10.10.10.10/32</pre>
+
+    <h3>4.4. Reenvío IP y firewall</h3>
+<pre>echo 'net.ipv4.ip_forward=1' | sudo tee /etc/sysctl.d/99-wireguard-forward.conf
+sudo sysctl --system
+sudo ufw allow 51820/udp
+sudo ufw enable</pre>
+
+    <h3>4.5. Arranque del servicio con systemd</h3>
+<pre>sudo systemctl enable --now wg-quick@wg0
+systemctl status wg-quick@wg0
+sudo wg show</pre>
+
+    <h3>4.6. Configuración del cliente (Android)</h3>
+<pre>[Interface]
+PrivateKey = EDhFPVGc5ptCdNKHgFBP5NlojWa8RhN0t3z5BMog/3g=
+Address = 10.10.10.10/32
+DNS = 1.1.1.1
+
+[Peer]
+PublicKey = 0kBfgzxy2D6agJ4uDhOiIGsEyRhVLejj0lQXvtx5ijs=
+Endpoint = &lt;IP_DE_LA_PC&gt;:51820
+AllowedIPs = 10.10.10.0/24
+PersistentKeepalive = 25</pre>
+    <div class="note">
+      La IP del <code>Endpoint</code> se obtiene con <code>ip -br a</code> y puede cambiar según la red.
+      En la prueba exitosa se usó el hotspot del celular y la PC se conectó a ese hotspot.
+    </div>
+
+    <h3>4.7. Esquema de prueba con celular</h3>
+    <ol>
+      <li>Activar hotspot en el celular.</li>
+      <li>Conectar la PC al hotspot.</li>
+      <li>Usar la IP de la PC como <code>Endpoint</code>.</li>
+      <li>Activar el túnel WireGuard en el celular.</li>
+    </ol>
+
+    <h2 class="section">5. Pruebas y resultados</h2>
+    <h3>5.1. Verificación del túnel</h3>
+<pre>sudo wg show</pre>
+    <p>Resultado exitoso:</p>
+    <ul>
+      <li><code>latest handshake</code> presente</li>
+      <li>Transferencia de datos (<code>transfer</code>)</li>
+      <li>Peer del celular identificado</li>
+    </ul>
+<pre>interface: wg0
+  public key: 0kBfgzxy2D6agJ4uDhOiIGsEyRhVLejj0lQXvtx5ijs=
+  listening port: 51820
+
+peer: jc/7vq4fminBXonPq4Edst/fCvs7Hi8J8WFYQCt0BGQ=
+  endpoint: 10.180.247.232:45750
+  allowed ips: 10.10.10.10/32
+  latest handshake: 5 seconds ago
+  transfer: 1.80 KiB received, 368 B sent</pre>
+
+    <h3>5.2. Prueba de conectividad</h3>
+<pre>ping 10.10.10.10</pre>
+    <p>Se obtuvieron respuestas exitosas desde la IP VPN del celular.</p>
+
+    <h2 class="section">6. Direccionamiento utilizado</h2>
+    <table class="data">
+      <thead>
+        <tr><th>Dispositivo</th><th>IP VPN</th><th>Rol</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>PC (CachyOS)</td><td><code>10.10.10.1/24</code></td><td>Servidor VPN</td></tr>
+        <tr><td>Celular (Android)</td><td><code>10.10.10.10/32</code></td><td>Cliente VPN</td></tr>
+        <tr><td>Puerto</td><td><code>51820/udp</code></td><td>Escucha WireGuard</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section">7. Conclusiones</h2>
+    <ol>
+      <li>Se implementó una VPN funcional en CachyOS.</li>
+      <li>Se administró el servicio con <code>systemd</code>.</li>
+      <li>Se comparó un protocolo legado (PPTP) con uno moderno (WireGuard).</li>
+      <li>Se verificó la conexión mediante handshake y <code>ping</code>.</li>
+      <li>Se resolvieron problemas reales de firewall y aislamiento Wi‑Fi.</li>
+    </ol>
+
+    <h2 class="section">8. Recomendaciones</h2>
+    <ul>
+      <li>Preferir WireGuard u OpenVPN frente a PPTP.</li>
+      <li>Abrir únicamente el puerto necesario (<code>51820/udp</code>).</li>
+      <li>No compartir claves privadas.</li>
+      <li>Verificar la IP del <code>Endpoint</code> antes de demostrar.</li>
+    </ul>
+
+    <h2 class="section">9. Referencias</h2>
+    <ol>
+      <li>WireGuard. Documentación oficial. https://www.wireguard.com/</li>
+      <li><code>man wg</code> y <code>man wg-quick</code></li>
+      <li><code>man systemctl</code></li>
+      <li>Arch Wiki / CachyOS: WireGuard</li>
+      <li>Guía original de la práctica: Creación de una Red Privada Virtual (VPN) con PPTP en Ubuntu</li>
+    </ol>
+
+    <h2 class="section">10. Anexos (evidencias)</h2>
+    <div class="evidence">
+      <h3>Anexo A. Configuración del cliente y código QR</h3>
+      <img src="evidencias-practica4/01-qr-config-cliente.png" alt="QR configuración cliente" />
+
+      <h3>Anexo B. Configuración del servidor, firewall y servicio</h3>
+      <img src="evidencias-practica4/02-wg0-conf-ufw-systemctl.png" alt="Configuración wg0 y ufw" />
+
+      <h3>Anexo C. Verificación del túnel y ping</h3>
+      <img src="evidencias-practica4/03-wg-show-ping.png" alt="wg show y ping" />
+
+      <h3>Anexo D. App WireGuard activa en Android</h3>
+      <img src="evidencias-practica4/04-app-wireguard-activo.jpg" alt="App WireGuard activa" />
+
+      <h3>Anexo E. Túnel Hotspot conectado</h3>
+      <img src="evidencias-practica4/05-tunel-hotspot-conectado.jpg" alt="Túnel Hotspot conectado" />
+    </div>
+
+    <ul class="check">
+      <li>Configuración del cliente / QR</li>
+      <li>Archivo <code>/etc/wireguard/wg0.conf</code></li>
+      <li>Firewall (<code>ufw allow 51820/udp</code>)</li>
+      <li><code>sudo wg show</code> con handshake</li>
+      <li>App WireGuard activa</li>
+      <li><code>ping 10.10.10.10</code> exitoso</li>
+    </ul>
+  </div>
+</body>
+</html>

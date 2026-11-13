@@ -1,16 +1,19 @@
-# PRÁCTICA 4  
-## TALLER DE SISTEMAS OPERATIVOS  
-### Creación de una Red Privada Virtual (VPN)
+# INSTITUTO TECNOLÓGICO DE MORELIA  
+## DEPARTAMENTO DE SISTEMAS Y COMPUTACIÓN  
+### INGENIERÍA EN SISTEMAS COMPUTACIONALES
 
 ---
 
-**Institución:** _________________________________  
-**Carrera:** Ingeniería en Sistemas Computacionales / afín  
-**Materia:** Taller de Sistemas Operativos  
-**Alumno:** _________________________________  
-**No. de control:** _________________________________  
-**Grupo:** _________________________________  
-**Fecha:** 12 de noviembre de 2026  
+# PRACTICA 4 TALLER DE SISTEMAS OPERATIVOS  
+## Creación de una Red Privada Virtual (VPN) con WireGuard en CachyOS
+
+| | |
+|---|---|
+| **Presenta** | Cristian Muñoz Hinojosa |
+| **Número de Control** | 23121073 |
+| **Asignatura** | Taller de sistemas operativos |
+| **Docente** | Brenda Guadalupe Gonzalez |
+| **Lugar y Fecha** | Morelia, Michoacán — 12 de Noviembre de 2026 |
 
 ---
 
